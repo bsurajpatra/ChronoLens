@@ -3,10 +3,46 @@ import { useNavigate } from 'react-router-dom';
 import InstructionPanel from '../components/InstructionPanel';
 import { useAmbientAudio } from '../hooks/useAmbientAudio';
 import MuteToggle from '../components/MuteToggle';
-
+import InstallPrompt from '../components/InstallPrompt';
 const Landing = () => {
     const navigate = useNavigate();
     const { startAmbient, toggleMute, isMuted } = useAmbientAudio();
+    const [deferredPrompt, setDeferredPrompt] = React.useState(null);
+    const [canInstall, setCanInstall] = React.useState(false);
+
+    React.useEffect(() => {
+        const handler = (e) => {
+            e.preventDefault();
+            setDeferredPrompt(e);
+            setCanInstall(true);
+        };
+
+        window.addEventListener('beforeinstallprompt', handler);
+
+        // Check if already installed
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            setCanInstall(false);
+        }
+
+        return () => {
+            window.removeEventListener('beforeinstallprompt', handler);
+        };
+    }, []);
+
+    const handleInstallClick = async () => {
+        if (!deferredPrompt) {
+            alert("To install this app on your device:\n\n1. Tap 'Add to Home Screen' in your browser menu (Android/Chrome).\n2. Tap 'Share' then 'Add to Home Screen' (iOS/Safari).");
+            return;
+        }
+
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        
+        if (outcome === 'accepted') {
+            setCanInstall(false);
+        }
+        setDeferredPrompt(null);
+    };
 
     return (
         <div className="h-screen flex flex-col items-center justify-between p-6 safe-top safe-bottom relative overflow-hidden text-museum-text select-none text-center">
@@ -76,7 +112,16 @@ const Landing = () => {
                     </button>
                 </div>
 
-                <div className="w-12 h-[1px] bg-museum-accent/20"></div>
+                <div className="w-12 h-[1px] bg-museum-accent/20 mb-4"></div>
+                <button
+                    onClick={handleInstallClick}
+                    className="text-[10px] tracking-[0.3em] uppercase text-museum-accent/60 font-bold hover:text-museum-accent transition-all flex flex-col items-center group"
+                >
+                    <span className="group-hover:translate-y-[-2px] transition-transform">Download Archive</span>
+                    {!canInstall && !window.matchMedia('(display-mode: standalone)').matches && (
+                        <span className="text-[8px] opacity-40 normal-case tracking-normal mt-1">(Web App Mode)</span>
+                    ) }
+                </button>
             </footer>
 
             {/* Ambient Control - Moved to Bottom Left */}
@@ -86,6 +131,9 @@ const Landing = () => {
                     Sound
                 </p>
             </div>
+
+            {/* PWA Install Prompt - still there as a popup for better visibility */}
+            <InstallPrompt />
         </div>
     );
 };
