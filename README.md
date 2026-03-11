@@ -1,8 +1,8 @@
+![ChronoLens Logo](https://raw.githubusercontent.com/bsurajpatra/ChronoLens/main/public/logo.png)
+
 # ChronoLens — Exploring History Through Augmented Reality
 
 **ChronoLens** is a production-grade WebAR museum experience designed to bring historic portraits to life. By scanning physical artwork, users can uncover immersive digital narratives, artistic context, and archival details directly through their browser.
-
-![ChronoLens Logo](file:///C:/Users/ankit/.gemini/antigravity/brain/4679d798-5321-4822-8065-eb860718a82c/chronolens_logo_1773244162591.png)
 
 ## ✨ Key Features
 
@@ -32,7 +32,7 @@
 
 1.  Clone the repository:
     ```bash
-    git clone https://github.com/ankit/ChronoLens.git
+    git clone https://github.com/bsurajpatra/ChronoLens.git
     cd ChronoLens
     ```
 
