@@ -4,7 +4,7 @@
         "title": "Mona Lisa",
         "artist": "Leonardo da Vinci",
         "year": "1503",
-        "description": "One of the most celebrated portraits in the history of art, renowned for its enigmatic expression and mastery of sfumato.",
+        "description": "One of the most celebrated portraits in the history of art, renowned for its enigmatic expression and mastery of 'sfumato'—a technique using subtle gradations of light and shadow. Painted in the early 16th century, the subject's elusive smile and steady gaze have intrigued viewers for centuries, making it a cornerstone of High Renaissance portraiture. The background features a vast, desolate landscape, creating an atmospheric depth that pioneerized the use of aerial perspective in Western art.",
         "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/500px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg"
     },
     {
@@ -12,7 +12,7 @@
         "title": "Girl with a Pearl Earring",
         "artist": "Johannes Vermeer",
         "year": "1665",
-        "description": "A famous Tronie portrait known for its focal point — the oversized pearl earring and the subject's intimate, turning gaze.",
+        "description": "Often called the 'Mona Lisa of the North,' this masterpiece is a classic example of a 'tronie'—a Dutch Golden Age study of facial expressions. The focal point is the oversized pearl earring, which catches the light with striking realism. The subject’s turning gaze and parted lips create a sense of intimacy and direct engagement with the viewer, while the dark, featureless background emphasizes the vibrant blue of her oriental-style turban and the luminous quality of her skin.",
         "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/1665_Johannes_Vermeer_%281632-1675%29_-_Girl_with_a_Pearl_Earring_-_Mauritshuis_The_Hague_Netherlands.jpg/500px-1665_Johannes_Vermeer_%281632-1675%29_-_Girl_with_a_Pearl_Earring_-_Mauritshuis_The_Hague_Netherlands.jpg"
     },
     {
@@ -20,7 +20,7 @@
         "title": "Self-Portrait with Bandaged Ear",
         "artist": "Vincent van Gogh",
         "year": "1889",
-        "description": "Painted following the incident where Van Gogh mutilated his own ear, this work displays his characteristic bold brushstrokes and emotional intensity.",
+        "description": "Created in Arles during the aftermath of a severe mental health crisis, this self-portrait is a raw and powerful testament to Van Gogh's emotional state. The artist depicts himself wearing a heavy winter coat and a bandage over his ear, with an unwavering gaze that suggests deep introspection. The background features a canvas on an easel and a Japanese woodblock print, reflecting his artistic influences. Van Gogh’s signature bold, impasto brushstrokes and vibrant color palette bring a restless, psychological intensity to the work.",
         "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Vincent_van_Gogh_-_Self-portrait_with_bandaged_ear_%281889%2C_Courtauld_Institute%29.jpg/500px-Vincent_van_Gogh_-_Self-portrait_with_bandaged_ear_%281889%2C_Courtauld_Institute%29.jpg"
     },
     {
@@ -28,7 +28,7 @@
         "title": "Lady in the Moonlight",
         "artist": "Raja Ravi Varma",
         "year": "1889",
-        "description": "A masterpiece by the legendary Indian artist, blending European academic realism with Indian sensibilities and mythological themes.",
+        "description": "A prime example of Raja Ravi Varma's revolutionary style, this work masterfully blends European academic realism with Indian mythological and aesthetic sensibilities. The portrait captures a woman in a moment of quiet reflection, bathed in the ethereal, silvery light of the moon. Ravi Varma was a pioneer in using Western techniques like oil painting to depict Indian subjects with profound dignity and grace. The intricate detailing of the 'sari' and ornaments, combined with the poetic use of chiaroscuro, makes this one of the most iconic romantic images in modern Indian art history.",
         "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Raja_Ravi_Varma_-_Lady_in_the_Moonlight.jpg/500px-Raja_Ravi_Varma_-_Lady_in_the_Moonlight.jpg"
     }
 ]

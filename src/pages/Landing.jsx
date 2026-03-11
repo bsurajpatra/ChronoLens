@@ -1,42 +1,32 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import InstructionPanel from '../components/InstructionPanel';
 import { useAmbientAudio } from '../hooks/useAmbientAudio';
+import MuteToggle from '../components/MuteToggle';
 
 const Landing = () => {
     const navigate = useNavigate();
-    const { startAmbient, isPlaying } = useAmbientAudio();
-
-    // Browser Autoplay Policy: Fallback to any first interaction
-    useEffect(() => {
-        const attemptPlay = () => {
-             console.log("🎻 Interaction detected. Unmuting Museum Soundscape...");
-             startAmbient();
-             
-             // Cleanup all potential triggers
-             ['click', 'touchstart', 'mousemove', 'wheel'].forEach(type => {
-                 document.removeEventListener(type, attemptPlay);
-             });
-        };
-
-        if (!isPlaying) {
-            ['click', 'touchstart', 'mousemove', 'wheel'].forEach(type => {
-                document.addEventListener(type, attemptPlay, { once: true });
-            });
-        }
-
-        return () => {
-            ['click', 'touchstart', 'mousemove', 'wheel'].forEach(type => {
-                document.removeEventListener(type, attemptPlay);
-            });
-        };
-    }, [startAmbient, isPlaying]);
+    const { startAmbient, toggleMute, isMuted } = useAmbientAudio();
 
     return (
-        <div className="h-screen flex flex-col items-center justify-between p-6 safe-top safe-bottom relative overflow-hidden bg-museum-bg text-museum-text select-none">
+        <div className="h-screen flex flex-col items-center justify-between p-6 safe-top safe-bottom relative overflow-hidden text-museum-text select-none text-center">
+            {/* Cinematic Background Layer */}
+            <div className="absolute inset-0 z-0 overflow-hidden">
+                {/* Primary Static Background (Generated Gallery) */}
+                <img 
+                    src="/museum_bg.png" 
+                    className="absolute inset-0 w-full h-full object-cover opacity-70 scale-105" 
+                    alt="Gallery Atmosphere"
+                />
+                
+                {/* Layered Branding Vignettes for Depth */}
+                <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-black/80"></div>
+                <div className="absolute inset-0 bg-black/20 backdrop-blur-[1px]"></div>
+            </div>
+
             {/* Museum Atmosphere Layers */}
             <div className="grain"></div>
-            <div className="absolute inset-0 museum-vignette z-0"></div>
+            <div className="absolute inset-0 museum-vignette z-1"></div>
 
             {/* Top Atmospheric Gradient */}
             <div className="absolute top-0 left-0 w-full h-[30%] bg-gradient-to-b from-museum-accent/10 to-transparent pointer-events-none"></div>
@@ -66,21 +56,36 @@ const Landing = () => {
                 <InstructionPanel />
             </main>
 
-            <footer className="w-full max-w-xs z-10 pb-22 flex flex-col items-center">
-                <button
-                    onClick={async () => {
-                        await startAmbient(); // Reliable fallback unlock
-                        navigate('/ar');
-                    }}
-                    className="group relative w-full overflow-hidden rounded-xl cursor-pointer"
-                >
-                    <div className="absolute inset-0 bg-museum-accent transition-premium group-active:scale-95 group-active:brightness-90"></div>
-                    <div className="relative py-5 text-museum-bg font-bold text-center tracking-[0.2em] uppercase text-xs shadow-[0_10px_30px_rgba(198,161,91,0.2)] transition-premium group-active:scale-95">
-                        Enter AR Gallery
-                    </div>
-                </button>
-                <div className="mt-8 w-12 h-[1px] bg-museum-accent/20"></div>
+            <footer className="w-full max-w-xs z-20 pb-32 flex flex-col items-center">
+                {/* Enter AR Button - Moved Up */}
+                <div className="w-full mb-8">
+                    <button
+                        onClick={async () => {
+                            // Only force start if user hasn't explicitly muted already
+                            if (isMuted) {
+                                await startAmbient();
+                            }
+                            navigate('/ar');
+                        }}
+                        className="group relative w-full overflow-hidden rounded-xl cursor-pointer"
+                    >
+                        <div className="absolute inset-0 bg-museum-accent transition-premium group-active:scale-95 group-active:brightness-90"></div>
+                        <div className="relative py-5 text-museum-bg font-bold text-center tracking-[0.2em] uppercase text-xs shadow-[0_10px_30px_rgba(198,161,91,0.2)] transition-premium group-active:scale-95">
+                            Enter AR Gallery
+                        </div>
+                    </button>
+                </div>
+                
+                <div className="w-12 h-[1px] bg-museum-accent/20"></div>
             </footer>
+
+            {/* Ambient Control - Moved to Bottom Left */}
+            <div className="fixed bottom-8 left-6 z-[9999] flex flex-col items-center space-y-2">
+                <MuteToggle isMuted={isMuted} onToggle={toggleMute} className="relative" />
+                <p className="text-[8px] tracking-[0.3em] uppercase text-museum-accent/40 font-bold">
+                    Sound
+                </p>
+            </div>
         </div>
     );
 };

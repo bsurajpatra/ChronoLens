@@ -90,11 +90,11 @@ const ARViewer = () => {
                         e.preventDefault();
                         handleBack();
                     }}
-                    className="w-14 h-14 bg-museum-secondary/95 backdrop-blur-3xl border border-museum-accent/40 rounded-full flex items-center justify-center active:scale-90 transition-all shadow-2xl"
+                    className="w-10 h-10 bg-museum-secondary/95 backdrop-blur-3xl border border-museum-accent/20 rounded-full flex items-center justify-center active:scale-90 transition-all shadow-2xl"
                     style={{ WebkitTapHighlightColor: 'transparent' }}
                     aria-label="Back to Gallery"
                 >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-museum-accent">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-museum-accent">
                         <path d="M19 12H5M12 19l-7-7 7-7" />
                     </svg>
                 </button>
