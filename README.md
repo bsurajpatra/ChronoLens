@@ -1,16 +1,69 @@
-# React + Vite
+# ChronoLens — Exploring History Through Augmented Reality
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**ChronoLens** is a production-grade WebAR museum experience designed to bring historic portraits to life. By scanning physical artwork, users can uncover immersive digital narratives, artistic context, and archival details directly through their browser.
 
-Currently, two official plugins are available:
+![ChronoLens Logo](file:///C:/Users/ankit/.gemini/antigravity/brain/4679d798-5321-4822-8065-eb860718a82c/chronolens_logo_1773244162591.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Key Features
 
-## React Compiler
+*   **Multi-Portrait AR Tracking**: Seamlessly detects and tracks multiple historical portraits using the `MindAR` engine.
+*   **Immersive Museum Ambience**: Soft, looping instrumental soundscapes that fade in naturally with user interaction.
+*   **Premium XR Interface**: A custom-designed scanning viewfinder with gold accents, pulsing animations, and intelligent tracking feedback.
+*   **Dynamic Information Surface**: Expandable content panels providing deep historical context for each recognized artwork.
+*   **Performance Optimized**: Pre-rendered Canvas textures for smooth 60fps performance on mobile and high-end devices.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Technology Stack
 
-## Expanding the ESLint configuration
+*   **Frontend**: React (v19)
+*   **AR Engine**: MindAR.js (with Three.js integration)
+*   **3D Rendering**: Three.js
+*   **Styling**: Tailwind CSS (v4)
+*   **Build Tool**: Vite
+*   **Audio**: Custom Global Singleton Audio Hook (`useAmbientAudio`)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🚀 Getting Started
+
+### Prerequisites
+
+*   Node.js (LTS version recommended)
+*   A modern mobile device or laptop with a camera.
+
+### Installation
+
+1.  Clone the repository:
+    ```bash
+    git clone https://github.com/ankit/ChronoLens.git
+    cd ChronoLens
+    ```
+
+2.  Install dependencies:
+    ```bash
+    npm install
+    ```
+
+3.  Run the development server:
+    ```bash
+    npm run dev
+    ```
+
+4.  Open the provided URL in your browser. (Note: For mobile testing, ensure you use a service like `ngrok` or access your local IP over HTTPS).
+
+## 📂 Project Structure
+
+*   `src/ar/`: Core AR logic and `mindarScene.js` for engine initialization.
+*   `src/components/`: Reusable UI components like the `Loader`, `PortraitPanel`, and `MuteToggle`.
+*   `src/hooks/`: Custom React hooks, including `useAmbientAudio` for stateful sound management.
+*   `src/pages/`: Main application routes (`Landing` and `ARViewer`).
+*   `src/data/`: Data stores for portrait information and historical metadata.
+*   `public/`: Static assets including `targets.mind` (AR targets) and `ambient.mp3` (museum audio).
+
+## 🎨 Design Philosophy
+
+ChronoLens follows a **Museum Luxury** aesthetic, utilizing:
+*   **Heritage Gold (#c6a15b)** for primary accents.
+*   **Obsidian Black** and **Ivory Textures** for depth and elegance.
+*   **Premium Typography** (Playfair Display) to evoke a sense of historical archive.
+
+---
+
+*Developed with passion for preserving history through technology.*
