@@ -1,0 +1,88 @@
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import InstructionPanel from '../components/InstructionPanel';
+import { useAmbientAudio } from '../hooks/useAmbientAudio';
+
+const Landing = () => {
+    const navigate = useNavigate();
+    const { startAmbient, isPlaying } = useAmbientAudio();
+
+    // Browser Autoplay Policy: Fallback to any first interaction
+    useEffect(() => {
+        const attemptPlay = () => {
+             console.log("🎻 Interaction detected. Unmuting Museum Soundscape...");
+             startAmbient();
+             
+             // Cleanup all potential triggers
+             ['click', 'touchstart', 'mousemove', 'wheel'].forEach(type => {
+                 document.removeEventListener(type, attemptPlay);
+             });
+        };
+
+        if (!isPlaying) {
+            ['click', 'touchstart', 'mousemove', 'wheel'].forEach(type => {
+                document.addEventListener(type, attemptPlay, { once: true });
+            });
+        }
+
+        return () => {
+            ['click', 'touchstart', 'mousemove', 'wheel'].forEach(type => {
+                document.removeEventListener(type, attemptPlay);
+            });
+        };
+    }, [startAmbient, isPlaying]);
+
+    return (
+        <div className="h-screen flex flex-col items-center justify-between p-6 safe-top safe-bottom relative overflow-hidden bg-museum-bg text-museum-text select-none">
+            {/* Museum Atmosphere Layers */}
+            <div className="grain"></div>
+            <div className="absolute inset-0 museum-vignette z-0"></div>
+
+            {/* Top Atmospheric Gradient */}
+            <div className="absolute top-0 left-0 w-full h-[30%] bg-gradient-to-b from-museum-accent/10 to-transparent pointer-events-none"></div>
+
+            <header className="w-full pt-8 flex justify-center z-10 transition-all duration-1000 delay-300">
+                <div className="h-[1px] w-8 bg-museum-accent/30 mr-4 self-center"></div>
+                <h1 className="text-sm font-serif font-bold tracking-[0.4em] text-museum-accent uppercase">Museum Experience</h1>
+                <div className="h-[1px] w-8 bg-museum-accent/30 ml-4 self-center"></div>
+            </header>
+
+            <main className="flex-1 flex flex-col items-center justify-center text-center space-y-12 z-10 w-full max-w-md">
+                <div className="space-y-6 px-4">
+                    <div className="relative inline-block group">
+                         <div className="absolute -inset-4 bg-museum-accent/5 rounded-full blur-2xl group-hover:bg-museum-accent/10 transition-all duration-1000"></div>
+                         <h2 className="relative text-6xl font-serif font-bold tracking-tight text-museum-text leading-tight drop-shadow-2xl">
+                             ChronoLens
+                         </h2>
+                    </div>
+                    <p className="text-museum-accent tracking-[0.25em] uppercase text-[10px] font-bold opacity-90 pb-4">
+                        Exploring History Through Augmented Reality
+                    </p>
+                    <p className="text-museum-muted text-sm leading-relaxed max-w-[300px] mx-auto opacity-80 font-medium">
+                        Scan historic portraits to uncover contextual narratives from the past through immersive augmented reality.
+                    </p>
+                </div>
+
+                <InstructionPanel />
+            </main>
+
+            <footer className="w-full max-w-xs z-10 pb-22 flex flex-col items-center">
+                <button
+                    onClick={async () => {
+                        await startAmbient(); // Reliable fallback unlock
+                        navigate('/ar');
+                    }}
+                    className="group relative w-full overflow-hidden rounded-xl cursor-pointer"
+                >
+                    <div className="absolute inset-0 bg-museum-accent transition-premium group-active:scale-95 group-active:brightness-90"></div>
+                    <div className="relative py-5 text-museum-bg font-bold text-center tracking-[0.2em] uppercase text-xs shadow-[0_10px_30px_rgba(198,161,91,0.2)] transition-premium group-active:scale-95">
+                        Enter AR Gallery
+                    </div>
+                </button>
+                <div className="mt-8 w-12 h-[1px] bg-museum-accent/20"></div>
+            </footer>
+        </div>
+    );
+};
+
+export default Landing;
