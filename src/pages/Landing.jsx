@@ -67,7 +67,7 @@ const Landing = () => {
             {/* Top Atmospheric Gradient */}
             <div className="absolute top-0 left-0 w-full h-[30%] bg-gradient-to-b from-museum-accent/10 to-transparent pointer-events-none"></div>
 
-            <header className="w-full pt-8 flex justify-center z-10 transition-all duration-1000 delay-300">
+            <header className="w-full pt-10 flex justify-center z-10 transition-all duration-1000 delay-300">
                 <div className="h-[1px] w-8 bg-museum-accent/30 mr-4 self-center"></div>
                 <h1 className="text-sm font-serif font-bold tracking-[0.4em] text-museum-accent uppercase">Museum Experience</h1>
                 <div className="h-[1px] w-8 bg-museum-accent/30 ml-4 self-center"></div>
@@ -112,16 +112,20 @@ const Landing = () => {
                     </button>
                 </div>
 
-                <div className="w-12 h-[1px] bg-museum-accent/20 mb-4"></div>
-                <button
-                    onClick={handleInstallClick}
-                    className="text-[10px] tracking-[0.3em] uppercase text-museum-accent/60 font-bold hover:text-museum-accent transition-all flex flex-col items-center group"
-                >
-                    <span className="group-hover:translate-y-[-2px] transition-transform">Download Archive</span>
-                    {!canInstall && !window.matchMedia('(display-mode: standalone)').matches && (
-                        <span className="text-[8px] opacity-40 normal-case tracking-normal mt-1">(Web App Mode)</span>
-                    ) }
-                </button>
+                {!window.matchMedia('(display-mode: standalone)').matches && (
+                    <>
+                        <div className="w-12 h-[1px] bg-museum-accent/20 mb-4"></div>
+                        <button
+                            onClick={handleInstallClick}
+                            className="text-[10px] tracking-[0.3em] uppercase text-museum-accent/60 font-bold hover:text-museum-accent transition-all flex flex-col items-center group"
+                        >
+                            <span className="group-hover:translate-y-[-2px] transition-transform">Download Archive</span>
+                            {!canInstall && (
+                                <span className="text-[8px] opacity-40 normal-case tracking-normal mt-1">(Web App Mode)</span>
+                            )}
+                        </button>
+                    </>
+                )}
             </footer>
 
             {/* Ambient Control - Moved to Bottom Left */}
