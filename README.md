@@ -1,5 +1,3 @@
-![ChronoLens Logo](https://raw.githubusercontent.com/bsurajpatra/ChronoLens/main/public/logo.png)
-
 # ChronoLens — Exploring History Through Augmented Reality
 
 **ChronoLens** is a production-grade WebAR museum experience designed to bring historic portraits to life. By scanning physical artwork, users can uncover immersive digital narratives, artistic context, and archival details directly through their browser.
