@@ -106,12 +106,21 @@ export const useAmbientAudio = () => {
 
     const startAmbient = useCallback(async () => {
         if (!globalAudio) return;
+        
+        console.log("🎻 Unlocking museum audio session...");
         globalUserWantsPlaying = true;
-        globalIsMuted = false;
-        setIsMuted(false);
-        globalAudio.muted = false;
+        
+        // Physically start playback to overcome interaction wall, 
+        // but keep volume at 0 if the user hasn't unmuted yet.
         await runPlay();
-        fadeTo(0.35, 1500);
+        
+        if (!globalIsMuted) {
+            globalAudio.muted = false;
+            fadeTo(0.35, 400);
+        } else {
+            globalAudio.volume = 0;
+            globalAudio.muted = true;
+        }
     }, []);
 
     const toggleMute = useCallback(async () => {
@@ -124,9 +133,9 @@ export const useAmbientAudio = () => {
             globalUserWantsPlaying = true;
             globalAudio.muted = false;
             await runPlay();
-            fadeTo(0.35, 800);
+            fadeTo(0.35, 300);
         } else {
-            fadeTo(0, 800);
+            fadeTo(0, 300);
             // We keep it physically playing at volume 0 to prevent "pause" timeouts
         }
     }, []);
@@ -135,14 +144,25 @@ export const useAmbientAudio = () => {
         if (!globalAudio) return;
         console.log("🎻 Full Stop requested.");
         globalUserWantsPlaying = false;
-        fadeTo(0, 800);
+        fadeTo(0, 400);
         setTimeout(() => {
             if (globalAudio) {
                 globalAudio.pause();
                 globalAudio.currentTime = SILENCE_OFFSET;
             }
-        }, 850);
+        }, 450);
     }, []);
 
-    return { startAmbient, stopAmbient, toggleMute, isMuted, isPlaying };
+    const duckAmbient = useCallback((isDucked) => {
+        if (!globalAudio || globalIsMuted || !globalUserWantsPlaying) return;
+        
+        console.log(`🎻 Audio Ducking: ${isDucked ? 'ON' : 'OFF'}`);
+        if (isDucked) {
+            fadeTo(0.1, 400); // Reduce to 10% volume
+        } else {
+            fadeTo(0.35, 400); // Return to 35% volume
+        }
+    }, []);
+
+    return { startAmbient, stopAmbient, toggleMute, duckAmbient, isMuted, isPlaying };
 };

@@ -13,12 +13,12 @@ const Landing = () => {
             {/* Cinematic Background Layer */}
             <div className="absolute inset-0 z-0 overflow-hidden">
                 {/* Primary Static Background (Generated Gallery) */}
-                <img 
-                    src="/museum_bg.png" 
-                    className="absolute inset-0 w-full h-full object-cover opacity-70 scale-105" 
+                <img
+                    src="/museum_bg.webp"
+                    className="absolute inset-0 w-full h-full object-cover opacity-70 scale-105"
                     alt="Gallery Atmosphere"
                 />
-                
+
                 {/* Layered Branding Vignettes for Depth */}
                 <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-black/80"></div>
                 <div className="absolute inset-0 bg-black/20 backdrop-blur-[1px]"></div>
@@ -40,10 +40,10 @@ const Landing = () => {
             <main className="flex-1 flex flex-col items-center justify-center text-center space-y-12 z-10 w-full max-w-md">
                 <div className="space-y-6 px-4">
                     <div className="relative inline-block group">
-                         <div className="absolute -inset-4 bg-museum-accent/5 rounded-full blur-2xl group-hover:bg-museum-accent/10 transition-all duration-1000"></div>
-                         <h2 className="relative text-6xl font-serif font-bold tracking-tight text-museum-text leading-tight drop-shadow-2xl">
-                             ChronoLens
-                         </h2>
+                        <div className="absolute -inset-4 bg-museum-accent/5 rounded-full blur-2xl group-hover:bg-museum-accent/10 transition-all duration-1000"></div>
+                        <h2 className="relative text-6xl font-serif font-bold tracking-tight text-museum-text leading-tight drop-shadow-2xl">
+                            ChronoLens
+                        </h2>
                     </div>
                     <p className="text-museum-accent tracking-[0.25em] uppercase text-[10px] font-bold opacity-90 pb-4">
                         Exploring History Through Augmented Reality
@@ -75,7 +75,7 @@ const Landing = () => {
                         </div>
                     </button>
                 </div>
-                
+
                 <div className="w-12 h-[1px] bg-museum-accent/20"></div>
             </footer>
 
