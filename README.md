@@ -6,22 +6,22 @@
 
 ## ✨ Key Features
 
-*   **Multi-Portrait AR Tracking**: Seamlessly detects and tracks multiple historical portraits using the `MindAR` engine.
-*   **Narrative Audio Tours**: Integrated voiceover transcripts for portraits, providing a guided tour experience.
-*   **Intelligent Audio Ducking**: Background ambient music automatically reduces volume (ducks) during voiceovers to ensure narrative clarity.
-*   **High-Resiliency Audio Engine**: A custom global singleton with a "heartbeat" keep-alive system to prevent aggressive browser power-throttling.
-*   **Premium XR Interface**: Custom-designed scanning viewfinder with gold accents, pulsing animations, and a top-anchored information panel for stability.
-*   **Cinematic Museum Lobby**: A high-end landing page featuring atmospheric background textures and an expandable "How it Works" guide.
-*   **Curated Historical Database**: Deeply researched academic narratives for all supported masterpieces.
+*   **Multi-Portrait AR Tracking**: Seamlessly detects and tracks multiple historical portraits using the `MindAR` engine with fine-tuned stability.
+*   **Cinematic Viewfinder**: A vertically-aligned rectangular scanner with real-time laser guidance and a high-speed "Scan Lock" zoom for instant reconnaissance.
+*   **Holographic 3D Overlays**: Dynamic 3D titles with micro-floating motion and soft "Museum Spotlight" glow feedback for immersive discovery.
+*   **Pseudo-Spatial Ambience**: A sophisticated audio engine that swell volumes on detection and attenuates focus during panel expansion, simulating gallery acoustics.
+*   **Narrative Audio Tours**: Integrated high-fidelity voiceovers with automatic ambient ducking for maximum narrative clarity.
+*   **Cinematic Museum Lobby**: A high-end entry experience featuring slow-zoom textures and an archival "How it Works" guide.
+*   **Curated Historical Database**: Deeply researched academic narratives for masters including Gainsborough, Klimt, and Da Vinci.
 
 ## 🛠️ Technology Stack
 
 *   **Frontend**: React (v19)
-*   **AR Engine**: MindAR.js (with Three.js integration)
-*   **3D Rendering**: Three.js
+*   **AR Engine**: MindAR.js (with custom OneEuroFilter stabilization)
+*   **3D Rendering**: Three.js (FrontSide rendering with dynamic CanvasTextures)
 *   **Styling**: Tailwind CSS (v4)
 *   **Build Tool**: Vite
-*   **Audio Architecture**: Custom Global Singleton with MediaSession API integration for OS-level persistence.
+*   **Audio Architecture**: `useSpatialAmbient` - A custom RAF-based interpolation engine for perceptual volume modulation.
 
 ## 🚀 Getting Started
 
@@ -54,7 +54,7 @@
 
 *   `src/ar/`: Core AR logic and `mindarScene.js` for engine initialization.
 *   `src/components/`: Reusable UI components like the `InstructionPanel`, `PortraitPanel`, and `MuteToggle`.
-*   `src/hooks/`: Custom React hooks, including `useAmbientAudio` for resilient stateful sound management.
+*   `src/hooks/`: Custom React hooks, including `useSpatialAmbient` for high-fidelity pseudo-spatial sound management.
 *   `src/pages/`: Main application routes (`Landing` and `ARViewer`).
 *   `src/data/`: Data stores for portrait information and historical metadata (`portraits.json`).
 *   `public/`: Static assets including `targets.mind` (AR targets), `ambient.mp3` (museum audio), and `museum_bg.webp` (lobby backdrop).
