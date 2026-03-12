@@ -13,20 +13,57 @@ const ARViewer = () => {
     const { isMuted, toggleMute, stopAmbient } = useAmbientAudio();
     const [arStatus, setArStatus] = useState('initializing'); // initializing, ready, error
     const [activePortraitIndex, setActivePortraitIndex] = useState(null);
+    const [transitioningPortraitIndex, setTransitioningPortraitIndex] = useState(null);
+    const [transitionStatus, setTransitionStatus] = useState('idle'); // idle, transitioningOut, transitioningIn
     const [showGuidance, setShowGuidance] = useState(false);
+    const [showScanLock, setShowScanLock] = useState(false);
 
-    // Tracking guidance timer
-    useEffect(() => {
-        let timer;
-        if (arStatus === 'ready' && activePortraitIndex === null) {
-            timer = setTimeout(() => {
-                setShowGuidance(true);
-            }, 5000); // 5 seconds of no detection
-        } else {
-            setShowGuidance(false);
+    const debounceTimerRef = useRef(null);
+    const activeIndexRef = useRef(null); // Ref to track current index without closure issues
+
+    const handleTargetFound = (index) => {
+        // Prevent duplicate triggers if already searching or active
+        if (activeIndexRef.current === index) return;
+        
+        if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+        
+        debounceTimerRef.current = setTimeout(() => {
+            // Check once more after debounce
+            if (activeIndexRef.current === index) return;
+
+            console.log("Transition started");
+            setTransitioningPortraitIndex(index);
+            setTransitionStatus('transitioningOut');
+            
+            // Trigger Recognition Flash (PART 1 - Scan Lock Zoom)
+            setShowScanLock(true);
+            setTimeout(() => setShowScanLock(false), 2000); // Sync with CSS 2s duration
+
+            setTimeout(() => {
+                activeIndexRef.current = index;
+                setActivePortraitIndex(index);
+                setTransitionStatus('transitioningIn');
+                console.log("Portrait detected");
+
+                setTimeout(() => {
+                    setTransitionStatus('idle');
+                    setTransitioningPortraitIndex(null);
+                    setShowGuidance(false);
+                    console.log("Transition completed");
+                }, 240);
+            }, 180);
+        }, 250);
+    };
+
+    const handleTargetLost = (index) => {
+        // If the target we just lost is the one we are actively showing
+        if (activeIndexRef.current === index) {
+            console.log("Target lost: clearing panel");
+            if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+            activeIndexRef.current = null;
+            setActivePortraitIndex(null);
         }
-        return () => clearTimeout(timer);
-    }, [arStatus, activePortraitIndex]);
+    };
 
     const handleInitialARSetup = async () => {
         setArStatus('initializing');
@@ -36,13 +73,8 @@ const ARViewer = () => {
 
             await startAR(
                 container,
-                (index) => {
-                    setActivePortraitIndex(index);
-                    setShowGuidance(false);
-                },
-                (index) => {
-                    setActivePortraitIndex((current) => current === index ? null : current);
-                }
+                handleTargetFound,
+                handleTargetLost
             );
 
             setArStatus('ready');
@@ -56,7 +88,7 @@ const ARViewer = () => {
         handleInitialARSetup();
         
         return () => {
-            // Clean up AR engine but keep audio unless explicitly navigating back
+            if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
             stopAR();
         };
     }, []);
@@ -108,7 +140,7 @@ const ARViewer = () => {
                 <div className="absolute inset-0 z-50 pointer-events-none flex flex-col items-center justify-center p-6">
 
                     {/* Centered Scanning Reticle */}
-                    <div className={`relative transition-all duration-700 ${activePortraitIndex !== null ? 'scale-110 opacity-0 pointer-events-none' : 'scale-100 opacity-100'}`}>
+                    <div className={`relative transition-all duration-500 ${(activePortraitIndex !== null || showScanLock) ? 'scale-110 opacity-0 pointer-events-none' : 'scale-100 opacity-100'}`}>
                         <div className="scanning-frame scanning-pulse">
                             <div className="scanning-laser"></div>
                             {/* Corner Viewfinder Brackets */}
@@ -132,8 +164,15 @@ const ARViewer = () => {
                 </div>
             )}
 
+            {/* Recognition Lock Zoom Effect */}
+            {showScanLock && <div className="scan-lock animate-scan-lock"></div>}
+
             {/* Information Surface */}
-            <PortraitPanel portrait={activePortrait} isActive={activePortraitIndex !== null} />
+            <PortraitPanel 
+                portrait={activePortrait} 
+                isActive={activePortraitIndex !== null} 
+                transitionStatus={transitionStatus}
+            />
 
             {/* Loading Overlay */}
             {arStatus === 'initializing' && (

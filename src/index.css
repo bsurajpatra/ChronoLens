@@ -42,8 +42,8 @@
   }
 
   .scanning-frame {
-    width: 260px;
-    height: 260px;
+    width: 220px;
+    height: 280px;
     position: relative;
     display: flex;
     align-items: center;
@@ -61,10 +61,37 @@
   }
 
   /* Precise Viewfinder Brackets */
-  .scanning-corner.tl { top: -5px; left: -5px; border-right: 0; border-bottom: 0; border-top-left-radius: 20px; }
-  .scanning-corner.tr { top: -5px; right: -5px; border-left: 0; border-bottom: 0; border-top-right-radius: 20px; }
-  .scanning-corner.bl { bottom: -5px; left: -5px; border-right: 0; border-top: 0; border-bottom-left-radius: 20px; }
-  .scanning-corner.br { bottom: -5px; right: -5px; border-left: 0; border-top: 0; border-bottom-right-radius: 20px; }
+  .scanning-corner.tl {
+    top: -5px;
+    left: -5px;
+    border-right: 0;
+    border-bottom: 0;
+    border-top-left-radius: 20px;
+  }
+
+  .scanning-corner.tr {
+    top: -5px;
+    right: -5px;
+    border-left: 0;
+    border-bottom: 0;
+    border-top-right-radius: 20px;
+  }
+
+  .scanning-corner.bl {
+    bottom: -5px;
+    left: -5px;
+    border-right: 0;
+    border-top: 0;
+    border-bottom-left-radius: 20px;
+  }
+
+  .scanning-corner.br {
+    bottom: -5px;
+    right: -5px;
+    border-left: 0;
+    border-top: 0;
+    border-bottom-right-radius: 20px;
+  }
 
   /* Interactive Scanning Laser */
   .scanning-laser {
@@ -80,9 +107,22 @@
   }
 
   @keyframes laser-move {
-    0%, 100% { top: 15%; opacity: 0; }
-    20%, 80% { opacity: 0.6; }
-    50% { top: 85%; opacity: 1; }
+
+    0%,
+    100% {
+      top: 15%;
+      opacity: 0;
+    }
+
+    20%,
+    80% {
+      opacity: 0.6;
+    }
+
+    50% {
+      top: 85%;
+      opacity: 1;
+    }
   }
 
   .scanning-pulse {
@@ -90,8 +130,17 @@
   }
 
   @keyframes scanner-breathe {
-    0%, 100% { opacity: 0.4; transform: scale(1); }
-    50% { opacity: 0.9; transform: scale(1.03); }
+
+    0%,
+    100% {
+      opacity: 0.4;
+      transform: scale(1);
+    }
+
+    50% {
+      opacity: 0.9;
+      transform: scale(1.03);
+    }
   }
 
   .spring-transition {
@@ -175,6 +224,45 @@
 
   .animate-button-pulse {
     animation: button-pulse 3s ease-in-out infinite;
+  }
+
+  /* Scanning Recognition Lock Effect */
+  .scan-lock {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 220px;
+    height: 280px;
+    transform: translate(-50%, -50%) scale(1);
+    border: 2px solid var(--color-museum-accent);
+    border-radius: 20px;
+    box-shadow: 0 0 30px var(--color-museum-accent);
+    z-index: 10002;
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  .animate-scan-lock {
+    animation: scan-lock-zoom 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes scan-lock-zoom {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.9);
+      border-width: 6px;
+    }
+
+    15% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(8);
+      border-width: 0.5px;
+      filter: blur(20px);
+    }
   }
 }
 

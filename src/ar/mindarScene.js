@@ -75,6 +75,36 @@ const createPortraitOverlayTexture = (portrait) => {
 };
 
 /**
+ * Creates a soft rectangular glow texture for the museum spotlight effect.
+ */
+const createGlowTexture = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 256;
+    const ctx = canvas.getContext('2d');
+    
+    // Clear
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Create a soft rectangular glow using a gradient or blur
+    // We use a linear gradient from center out to create a rectangular fade
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    
+    // Simple way: Draw a soft rectangle
+    ctx.shadowBlur = 60;
+    ctx.shadowColor = 'white';
+    ctx.fillStyle = 'white';
+    
+    // Draw centered rectangle smaller than canvas to allow blur space
+    const rectW = canvas.width * 0.7;
+    const rectH = canvas.height * 0.6;
+    ctx.fillRect(centerX - rectW / 2, centerY - rectH / 2, rectW, rectH);
+    
+    return new THREE.CanvasTexture(canvas);
+};
+
+/**
  * Phase-6: Multi-Portrait AR Engine Logic
  */
 export const startAR = async (container, onTargetFound, onTargetLost) => {
@@ -102,49 +132,136 @@ export const startAR = async (container, onTargetFound, onTargetLost) => {
         scene.add(ambientLight);
 
         // --- Multi-Portrait Dynamic Anchor Loop ---
+        const glowTexture = createGlowTexture();
+        const activeTargets = new Map();
+
         portraits.forEach((portrait, index) => {
             const anchor = mindarThree.addAnchor(index);
 
-            // Texture Pre-generation
+            // Container for all elements to allow consistent floating
+            const group = new THREE.Group();
+            anchor.group.add(group);
+
+            // 1. Overlay Title Plane
             const texture = createPortraitOverlayTexture(portrait);
             const geometry = new THREE.PlaneGeometry(1, 0.5);
             const material = new THREE.MeshBasicMaterial({
                 map: texture,
                 transparent: true,
-                opacity: 0, // Start invisible for fade-in
-                side: THREE.FrontSide, // Render only the front face to prevent ghosting
-                depthWrite: false     // Prevents z-fighting artifacts
+                opacity: 0,
+                side: THREE.FrontSide,
+                depthWrite: false
             });
             const plane = new THREE.Mesh(geometry, material);
+            plane.position.set(0, 0.65, 0.01);
+            plane.scale.set(0.85, 0.85, 0.85);
+            group.add(plane);
 
-            plane.position.set(0, 0.65, 0); // Positioned above frame
-            plane.scale.set(0.8, 0.8, 0.8); // Initial scale for pop effect
-            anchor.group.add(plane);
+            // 2. Glow Highlight Effect (Museum Spotlight)
+            const glowMaterial = new THREE.MeshBasicMaterial({
+                color: 0xc6a15b, // warm museum gold
+                map: glowTexture,
+                transparent: true,
+                opacity: 0,
+                depthWrite: false,
+                blending: THREE.AdditiveBlending
+            });
+            const glow = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 0.6), glowMaterial);
+            glow.position.set(0, 0.65, -0.01); // Behind overlay plane
+            group.add(glow);
 
-            // Lifecycle Callbacks - React Sync
+            let animFrame = null;
+            let startTime = null;
+            let isStabilized = false;
+
             anchor.onTargetFound = () => {
-                console.log(`Target detected: ${portrait.title}`);
                 if (onTargetFound) onTargetFound(index);
 
-                // Phase-7 Pop & Glow Entry
-                let progress = 0;
-                const animateIn = () => {
-                    if (progress < 1) {
-                        progress += 0.05;
-                        const ease = 1 - Math.pow(1 - progress, 3); // Cubic ease out
-                        plane.scale.set(0.8 + ease * 0.2, 0.8 + ease * 0.2, 0.8 + ease * 0.2);
+                startTime = performance.now();
+                activeTargets.set(index, true);
+                isStabilized = false;
+                console.log("Glow animation start");
+
+                const animate = (now) => {
+                    if (!activeTargets.has(index)) return;
+                    
+                    const elapsed = now - startTime;
+                    const time = now / 1000;
+
+                    // Micro Floating Motion
+                    group.position.y = Math.sin(time * 0.8) * 0.005;
+
+                    // Overlay Title Animation
+                    if (elapsed < 280) {
+                        const t = elapsed / 280;
+                        const ease = 1 - Math.pow(1 - t, 3); // easeOutCubic
+                        plane.scale.set(0.85 + (ease * 0.15), 0.85 + (ease * 0.15), 1);
                         material.opacity = ease * 0.95;
-                        requestAnimationFrame(animateIn);
+                    } else {
+                        plane.scale.set(1, 1, 1);
+                        material.opacity = 0.95;
                     }
+
+                    // Refined Glow HighLight Effect (PART 5)
+                    if (elapsed < 500) {
+                        const t = elapsed / 500;
+                        const ease = 1 - Math.pow(1 - t, 3); // easeOutCubic
+                        
+                        // 0 -> 0.45 -> 0.3 Logic for better visibility
+                        if (t < 0.6) {
+                            glowMaterial.opacity = (t / 0.6) * 0.45;
+                        } else {
+                            glowMaterial.opacity = 0.45 - ((t - 0.6) / 0.4) * 0.15;
+                        }
+                    } else {
+                        if (!isStabilized) {
+                            console.log("Glow stabilized");
+                            isStabilized = true;
+                        }
+                        // Idle Breathing Animation (PART 6)
+                        const breathe = Math.sin(time * 0.6) * 0.03 + 0.3; 
+                        glowMaterial.opacity = breathe; // Oscillates 0.27 <-> 0.33
+                    }
+
+                    animFrame = requestAnimationFrame(animate);
                 };
-                animateIn();
+                animFrame = requestAnimationFrame(animate);
             };
 
             anchor.onTargetLost = () => {
-                console.log(`Target lost: ${index}`);
-                material.opacity = 0;
-                plane.scale.set(0.8, 0.8, 0.8);
+                activeTargets.delete(index);
                 if (onTargetLost) onTargetLost(index);
+                console.log("Glow fade out: expanding to full screen");
+
+                // Cinematic "Bloom Out" Fade (PART 7 - REFINED)
+                const fadeStart = performance.now();
+                const currentOpacity = material.opacity;
+                const currentGlowOpacity = glowMaterial.opacity;
+                const duration = 400; // Slightly longer for dramatic expansion
+
+                const animateOut = (now) => {
+                    const elapsed = now - fadeStart;
+                    const t = Math.min(elapsed / duration, 1);
+                    const easeOut = 1 - Math.pow(1 - t, 3); // easeOutCubic
+                    
+                    // Dramatic Scale Expansion
+                    // We scale the glow up massively to cover the view before it fades
+                    const scaleFactor = 1 + (easeOut * 15); 
+                    glow.scale.set(scaleFactor, scaleFactor, 1);
+                    
+                    material.opacity = currentOpacity * (1 - t);
+                    glowMaterial.opacity = currentGlowOpacity * (1 - t);
+                    
+                    if (t < 1) {
+                        requestAnimationFrame(animateOut);
+                    } else {
+                        // Reset for next detection
+                        glow.scale.set(1, 1, 1);
+                        material.opacity = 0;
+                        glowMaterial.opacity = 0;
+                    }
+                };
+                requestAnimationFrame(animateOut);
             };
         });
 

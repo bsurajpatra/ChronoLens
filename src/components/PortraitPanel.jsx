@@ -1,11 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAmbientAudio } from '../hooks/useAmbientAudio';
 
-const PortraitPanel = ({ portrait, isActive }) => {
+const PortraitPanel = ({ portrait, isActive, transitionStatus }) => {
     const [isExpanded, setIsExpanded] = useState(false);
     const [isVoiceoverPlaying, setIsVoiceoverPlaying] = useState(false);
     const voiceoverRef = useRef(null);
     const { duckAmbient } = useAmbientAudio();
+
+    // Mapping transition states to CSS classes (PART 3.2)
+    const transitionClasses = {
+        idle: 'translate-y-0 opacity-100',
+        transitioningOut: 'translate-y-3 opacity-40',
+        transitioningIn: 'translate-y-3 opacity-40',
+    };
 
     // Reset expanded state when portrait changes or disappears
     useEffect(() => {
@@ -62,7 +69,7 @@ const PortraitPanel = ({ portrait, isActive }) => {
 
     return (
         <div
-            className={`fixed bottom-0 left-0 w-full z-[1000] p-4 spring-transition ${isActive ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
+            className={`fixed bottom-0 left-0 w-full z-[1000] p-4 spring-transition duration-300 ${isActive ? (transitionClasses[transitionStatus] || 'translate-y-0 opacity-100') : 'translate-y-full opacity-0'
                 }`}
         >
             <div
