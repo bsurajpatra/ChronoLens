@@ -5,12 +5,12 @@ import Loader from '../components/Loader';
 import PortraitPanel from '../components/PortraitPanel';
 import MuteToggle from '../components/MuteToggle';
 import portraits from '../data/portraits.json';
-import { useAmbientAudio } from '../hooks/useAmbientAudio';
+import { useSpatialAmbient } from '../hooks/useSpatialAmbient';
 
 const ARViewer = () => {
     const navigate = useNavigate();
     const arContainerRef = useRef(null);
-    const { isMuted, toggleMute, stopAmbient } = useAmbientAudio();
+    const { isMuted, toggleMute, stopAmbient, setDetected } = useSpatialAmbient();
     const [arStatus, setArStatus] = useState('initializing'); // initializing, ready, error
     const [activePortraitIndex, setActivePortraitIndex] = useState(null);
     const [transitioningPortraitIndex, setTransitioningPortraitIndex] = useState(null);
@@ -43,6 +43,7 @@ const ARViewer = () => {
                 activeIndexRef.current = index;
                 setActivePortraitIndex(index);
                 setTransitionStatus('transitioningIn');
+                setDetected(true); // PART 2: Detection Spatial Boost
                 console.log("Portrait detected");
 
                 setTimeout(() => {
@@ -62,6 +63,7 @@ const ARViewer = () => {
             if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
             activeIndexRef.current = null;
             setActivePortraitIndex(null);
+            setDetected(false); // PART 2: Ambient restored
         }
     };
 

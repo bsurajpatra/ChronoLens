@@ -1,12 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import InstructionPanel from '../components/InstructionPanel';
-import { useAmbientAudio } from '../hooks/useAmbientAudio';
+import { useSpatialAmbient } from '../hooks/useSpatialAmbient';
 import MuteToggle from '../components/MuteToggle';
 import InstallPrompt from '../components/InstallPrompt';
 const Landing = () => {
     const navigate = useNavigate();
-    const { startAmbient, toggleMute, isMuted } = useAmbientAudio();
+    const { startAmbient, toggleMute, isMuted } = useSpatialAmbient();
     const [deferredPrompt, setDeferredPrompt] = React.useState(null);
     const [canInstall, setCanInstall] = React.useState(false);
 

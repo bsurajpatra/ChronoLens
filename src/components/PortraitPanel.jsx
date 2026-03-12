@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useAmbientAudio } from '../hooks/useAmbientAudio';
+import { useSpatialAmbient } from '../hooks/useSpatialAmbient';
 
 const PortraitPanel = ({ portrait, isActive, transitionStatus }) => {
     const [isExpanded, setIsExpanded] = useState(false);
     const [isVoiceoverPlaying, setIsVoiceoverPlaying] = useState(false);
     const voiceoverRef = useRef(null);
-    const { duckAmbient } = useAmbientAudio();
+    const { duckAmbient, setPanelFocused } = useSpatialAmbient();
 
     // Mapping transition states to CSS classes (PART 3.2)
     const transitionClasses = {
@@ -16,10 +16,11 @@ const PortraitPanel = ({ portrait, isActive, transitionStatus }) => {
 
     // Reset expanded state when portrait changes or disappears
     useEffect(() => {
+        setPanelFocused(isActive);
         if (!isActive) {
             setIsExpanded(false);
         }
-    }, [portrait, isActive]);
+    }, [portrait, isActive, setPanelFocused]);
 
     // Handle Voiceover Cleanup & Portrait Changes
     useEffect(() => {
