@@ -110,11 +110,12 @@ const ARViewer = () => {
                     {/* Centered Scanning Reticle */}
                     <div className={`relative transition-all duration-700 ${activePortraitIndex !== null ? 'scale-110 opacity-0 pointer-events-none' : 'scale-100 opacity-100'}`}>
                         <div className="scanning-frame scanning-pulse">
-                            {/* Corner Indicators - Offsets now handled in index.css */}
-                            <div className="scanning-corner top-0 left-0 rounded-tl-2xl shadow-[-5px_-5px_20px_rgba(198,161,91,0.2)]"></div>
-                            <div className="scanning-corner top-0 right-0 rounded-tr-2xl shadow-[5px_-5px_20px_rgba(198,161,91,0.2)]"></div>
-                            <div className="scanning-corner bottom-0 left-0 rounded-bl-2xl shadow-[-5px_5px_20px_rgba(198,161,91,0.2)]"></div>
-                            <div className="scanning-corner bottom-0 right-0 rounded-br-2xl shadow-[5px_5px_20px_rgba(198,161,91,0.2)]"></div>
+                            <div className="scanning-laser"></div>
+                            {/* Corner Viewfinder Brackets */}
+                            <div className="scanning-corner tl"></div>
+                            <div className="scanning-corner tr"></div>
+                            <div className="scanning-corner bl"></div>
+                            <div className="scanning-corner br"></div>
                         </div>
 
                         <p className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-max text-museum-accent/80 text-[10px] tracking-[0.4em] uppercase font-bold animate-pulse">
