@@ -76,9 +76,9 @@ const PortraitPanel = ({ portrait, isActive }) => {
                     aria-label={isExpanded ? "Collapse info" : "Expand info"}
                 ></button>
 
-                <div className="flex items-start gap-5 mt-3 mb-6">
+                <div className="flex items-start gap-4 mt-3 mb-6">
                     {/* Portrait Thumbnail - Scales with expansion */}
-                    <div className={`relative flex-shrink-0 overflow-hidden rounded-xl border border-museum-accent/20 shadow-xl transition-all duration-300 ${isExpanded ? 'w-24 h-36' : 'w-20 h-28'
+                    <div className={`relative flex-shrink-0 overflow-hidden rounded-xl border border-museum-accent/20 shadow-xl transition-all duration-300 ${isExpanded ? 'w-20 h-30 sm:w-24 sm:h-36' : 'w-16 h-24 sm:w-20 sm:h-28'
                         }`}>
                         <img
                             src={portrait.image}
@@ -87,18 +87,18 @@ const PortraitPanel = ({ portrait, isActive }) => {
                         />
                     </div>
 
-                    <div className="flex-1 space-y-2 text-left">
-                        <div className="flex justify-between items-start">
-                            <div>
-                                <h3 className="text-xl font-serif font-bold text-museum-text leading-tight tracking-tight">
+                    <div className="flex-1 min-w-0 space-y-2 text-left">
+                        <div className="flex justify-between items-start gap-3">
+                            <div className="min-w-0 flex-1">
+                                <h3 className="text-base sm:text-lg md:text-xl font-serif font-bold text-museum-text leading-tight tracking-tight break-words whitespace-normal">
                                     {portrait.title}
                                 </h3>
-                                <div className="flex items-center gap-2 opacity-80 mt-0.5">
-                                    <p className="text-museum-accent font-serif tracking-widest text-[9px] uppercase">
+                                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 opacity-80 mt-1">
+                                    <p className="text-museum-accent font-serif tracking-widest text-[8px] sm:text-[9px] uppercase truncate">
                                         {portrait.artist}
                                     </p>
-                                    <span className="w-1 h-1 rounded-full bg-museum-accent/20"></span>
-                                    <p className="text-museum-muted font-serif tracking-widest text-[9px] uppercase">
+                                    <span className="hidden sm:block w-1 h-1 rounded-full bg-museum-accent/20"></span>
+                                    <p className="text-museum-muted font-serif tracking-widest text-[8px] sm:text-[9px] uppercase">
                                         {portrait.year}
                                     </p>
                                 </div>
@@ -108,7 +108,7 @@ const PortraitPanel = ({ portrait, isActive }) => {
                             {portrait.audio && (
                                 <button
                                     onClick={toggleVoiceover}
-                                    className={`w-8 h-8 rounded-full border border-museum-accent/30 flex items-center justify-center transition-all ${isVoiceoverPlaying ? 'bg-museum-accent text-black shadow-[0_0_15px_rgba(198,161,91,0.5)]' : 'bg-transparent text-museum-accent'}`}
+                                    className={`w-8 h-8 flex-shrink-0 rounded-full border border-museum-accent/30 flex items-center justify-center transition-all ${isVoiceoverPlaying ? 'bg-museum-accent text-black shadow-[0_0_15px_rgba(198,161,91,0.5)]' : 'bg-transparent text-museum-accent'}`}
                                 >
                                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                                         {isVoiceoverPlaying ? (

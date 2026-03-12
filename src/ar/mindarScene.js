@@ -5,6 +5,32 @@ import portraits from '../data/portraits.json';
 let mindarThree = null;
 
 /**
+ * Helper to wrap text on a canvas context.
+ */
+const wrapText = (ctx, text, x, y, maxWidth, lineHeight) => {
+    const words = text.split(' ');
+    let line = '';
+    let testLine = '';
+    let lineCount = 0;
+
+    for (let n = 0; n < words.length; n++) {
+        testLine = line + words[n] + ' ';
+        const metrics = ctx.measureText(testLine);
+        const testWidth = metrics.width;
+        if (testWidth > maxWidth && n > 0) {
+            ctx.fillText(line, x, y);
+            line = words[n] + ' ';
+            y += lineHeight;
+            lineCount++;
+        } else {
+            line = testLine;
+        }
+    }
+    ctx.fillText(line, x, y);
+    return y;
+};
+
+/**
  * Creates a pre-rendered canvas texture for high performance.
  */
 const createPortraitOverlayTexture = (portrait) => {
@@ -22,21 +48,26 @@ const createPortraitOverlayTexture = (portrait) => {
     ctx.lineWidth = 12;
     ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
 
-    // Title (Gold Serif)
+    const maxWidth = canvas.width - 80; // Margin for safety
+
+    // Title (Gold Serif) - With Word Wrap
     ctx.fillStyle = '#c6a15b';
     ctx.font = 'bold 36px serif';
     ctx.textAlign = 'center';
-    ctx.fillText(portrait.title, canvas.width / 2, 90);
+    
+    // Start drawing title and get the last Y position
+    const startY = 80;
+    const lastTitleY = wrapText(ctx, portrait.title, canvas.width / 2, startY, maxWidth, 45);
 
-    // Artist (Ivory)
+    // Artist (Ivory) - Positioned relative to title
     ctx.fillStyle = '#f5f1e6';
     ctx.font = '26px serif';
-    ctx.fillText(portrait.artist, canvas.width / 2, 145);
+    ctx.fillText(portrait.artist, canvas.width / 2, lastTitleY + 55);
 
     // Year (Muted)
     ctx.fillStyle = '#b8b4a8';
     ctx.font = 'italic 20px serif';
-    ctx.fillText(portrait.year, canvas.width / 2, 185);
+    ctx.fillText(portrait.year, canvas.width / 2, lastTitleY + 95);
 
     const texture = new THREE.CanvasTexture(canvas);
     texture.anisotropy = 16;
@@ -47,12 +78,16 @@ const createPortraitOverlayTexture = (portrait) => {
  * Phase-6: Multi-Portrait AR Engine Logic
  */
 export const startAR = async (container, onTargetFound, onTargetLost) => {
+    if (mindarThree) return { success: true }; // Guard against double initialization
+
     try {
         mindarThree = new MindARThree({
             container: container,
             imageTargetSrc: '/targets.mind',
             uiScanning: 'no',
             uiLoading: 'no',
+            filterMinCF: 1, // Increased to reduce high-frequency jitter
+            filterBeta: 1,  // Decreased to smooth out movement 
         });
 
         const { renderer, scene, camera } = mindarThree;
@@ -77,7 +112,8 @@ export const startAR = async (container, onTargetFound, onTargetLost) => {
                 map: texture,
                 transparent: true,
                 opacity: 0, // Start invisible for fade-in
-                side: THREE.DoubleSide
+                side: THREE.FrontSide, // Render only the front face to prevent ghosting
+                depthWrite: false     // Prevents z-fighting artifacts
             });
             const plane = new THREE.Mesh(geometry, material);
 
