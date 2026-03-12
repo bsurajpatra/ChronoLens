@@ -51,7 +51,7 @@ const Landing = () => {
                 {/* Primary Static Background (Generated Gallery) */}
                 <img
                     src="/museum_bg.webp"
-                    className="absolute inset-0 w-full h-full object-cover opacity-70 scale-105"
+                    className="absolute inset-0 w-full h-full object-cover opacity-70 animate-slow-zoom"
                     alt="Gallery Atmosphere"
                 />
 
@@ -67,7 +67,7 @@ const Landing = () => {
             {/* Top Atmospheric Gradient */}
             <div className="absolute top-0 left-0 w-full h-[30%] bg-gradient-to-b from-museum-accent/10 to-transparent pointer-events-none"></div>
 
-            <header className="w-full pt-10 flex justify-center z-10 transition-all duration-1000 delay-300">
+            <header className="w-full pt-10 flex justify-center z-10 opacity-0 animate-reveal" style={{ animationDelay: '0.2s' }}>
                 <div className="h-[1px] w-8 bg-museum-accent/30 mr-4 self-center"></div>
                 <h1 className="text-sm font-serif font-bold tracking-[0.4em] text-museum-accent uppercase">Museum Experience</h1>
                 <div className="h-[1px] w-8 bg-museum-accent/30 ml-4 self-center"></div>
@@ -75,24 +75,26 @@ const Landing = () => {
 
             <main className="flex-1 flex flex-col items-center justify-center text-center space-y-12 z-10 w-full max-w-md">
                 <div className="space-y-6 px-4">
-                    <div className="relative inline-block group">
+                    <div className="relative inline-block group opacity-0 animate-reveal" style={{ animationDelay: '0.4s' }}>
                         <div className="absolute -inset-4 bg-museum-accent/5 rounded-full blur-2xl group-hover:bg-museum-accent/10 transition-all duration-1000"></div>
-                        <h2 className="relative text-6xl font-serif font-bold tracking-tight text-museum-text leading-tight drop-shadow-2xl">
+                        <h2 className="relative text-6xl font-serif font-bold tracking-tight text-museum-text leading-tight drop-shadow-2xl animate-float">
                             ChronoLens
                         </h2>
                     </div>
-                    <p className="text-museum-accent tracking-[0.25em] uppercase text-[10px] font-bold opacity-90 pb-4">
+                    <p className="text-museum-accent tracking-[0.25em] uppercase text-[10px] font-bold opacity-0 animate-reveal pb-4" style={{ animationDelay: '0.6s' }}>
                         Exploring History Through Augmented Reality
                     </p>
-                    <p className="text-museum-muted text-sm leading-relaxed max-w-[300px] mx-auto opacity-80 font-medium">
+                    <p className="text-museum-muted text-sm leading-relaxed max-w-[300px] mx-auto opacity-0 animate-reveal font-medium" style={{ animationDelay: '0.8s' }}>
                         Scan historic portraits to uncover contextual narratives from the past through immersive augmented reality.
                     </p>
                 </div>
 
-                <InstructionPanel />
+                <div className="opacity-0 animate-reveal" style={{ animationDelay: '1s' }}>
+                    <InstructionPanel />
+                </div>
             </main>
 
-            <footer className="w-full max-w-xs z-20 pb-32 flex flex-col items-center">
+            <footer className="w-full max-w-xs z-20 pb-32 flex flex-col items-center opacity-0 animate-reveal" style={{ animationDelay: '1.2s' }}>
                 {/* Enter AR Button - Moved Up */}
                 <div className="w-full mb-8">
                     <button
@@ -106,7 +108,7 @@ const Landing = () => {
                         className="group relative w-full overflow-hidden rounded-xl cursor-pointer"
                     >
                         <div className="absolute inset-0 bg-museum-accent transition-premium group-active:scale-95 group-active:brightness-90"></div>
-                        <div className="relative py-5 text-museum-bg font-bold text-center tracking-[0.2em] uppercase text-xs shadow-[0_10px_30px_rgba(198,161,91,0.2)] transition-premium group-active:scale-95">
+                        <div className="relative py-5 text-museum-bg font-bold text-center tracking-[0.2em] uppercase text-xs shadow-[0_10px_30px_rgba(198,161,91,0.2)] transition-premium group-active:scale-95 animate-button-pulse">
                             Enter AR Gallery
                         </div>
                     </button>

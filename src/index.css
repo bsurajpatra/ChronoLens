@@ -125,6 +125,71 @@
       opacity: 1;
     }
   }
+
+  /* Cinematic Animations */
+  @keyframes slow-zoom {
+    0% {
+      transform: scale(1);
+    }
+
+    100% {
+      transform: scale(1.15);
+    }
+  }
+
+  @keyframes reveal-text {
+    0% {
+      opacity: 0;
+      transform: translateY(20px) skewY(1deg);
+      filter: blur(10px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0) skewY(0deg);
+      filter: blur(0);
+    }
+  }
+
+  @keyframes float {
+
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+
+  .animate-slow-zoom {
+    animation: slow-zoom 10s ease-in-out infinite alternate;
+  }
+
+  .animate-reveal {
+    animation: reveal-text 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes button-pulse {
+
+    0%,
+    100% {
+      box-shadow: 0 10px 30px rgba(198, 161, 91, 0.2);
+    }
+
+    50% {
+      box-shadow: 0 15px 45px rgba(198, 161, 91, 0.4);
+    }
+  }
+
+  .animate-button-pulse {
+    animation: button-pulse 3s ease-in-out infinite;
+  }
 }
 
 @layer utilities {
