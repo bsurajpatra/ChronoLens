@@ -4,6 +4,7 @@ import InstructionPanel from '../components/InstructionPanel';
 import { useSpatialAmbient } from '../hooks/useSpatialAmbient';
 import MuteToggle from '../components/MuteToggle';
 import InstallPrompt from '../components/InstallPrompt';
+import ImmersiveBackground from '../components/ImmersiveBackground';
 const Landing = () => {
     const navigate = useNavigate();
     const { startAmbient, toggleMute, isMuted } = useSpatialAmbient();
@@ -47,17 +48,13 @@ const Landing = () => {
     return (
         <div className="h-screen flex flex-col items-center justify-between p-6 safe-top safe-bottom relative overflow-hidden text-museum-text select-none text-center">
             {/* Cinematic Background Layer */}
-            <div className="absolute inset-0 z-0 overflow-hidden">
-                {/* Primary Static Background (Generated Gallery) */}
-                <img
-                    src="/museum_bg.webp"
-                    className="absolute inset-0 w-full h-full object-cover opacity-70 animate-slow-zoom"
-                    alt="Gallery Atmosphere"
-                />
+            <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+                {/* Primary Immersive 3D Background */}
+                <ImmersiveBackground />
 
                 {/* Layered Branding Vignettes for Depth */}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-black/80"></div>
-                <div className="absolute inset-0 bg-black/20 backdrop-blur-[1px]"></div>
+                <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-transparent to-black/95 z-2"></div>
+                <div className="absolute inset-0 bg-black/30 backdrop-blur-[0.5px] z-1"></div>
             </div>
 
             {/* Museum Atmosphere Layers */}
