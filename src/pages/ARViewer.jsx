@@ -19,9 +19,16 @@ const ARViewer = () => {
     const [showScanLock, setShowScanLock] = useState(false);
 
     const debounceTimerRef = useRef(null);
-    const activeIndexRef = useRef(null); // Ref to track current index without closure issues
+    const activeIndexRef = useRef(null); 
+    const lossTimeoutRef = useRef(null);
 
     const handleTargetFound = (index) => {
+        // Cancel any pending loss sequence
+        if (lossTimeoutRef.current) {
+            clearTimeout(lossTimeoutRef.current);
+            lossTimeoutRef.current = null;
+        }
+
         // Prevent duplicate triggers if already searching or active
         if (activeIndexRef.current === index) return;
         
@@ -59,11 +66,17 @@ const ARViewer = () => {
     const handleTargetLost = (index) => {
         // If the target we just lost is the one we are actively showing
         if (activeIndexRef.current === index) {
-            console.log("Target lost: clearing panel");
-            if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
-            activeIndexRef.current = null;
-            setActivePortraitIndex(null);
-            setDetected(false); // PART 2: Ambient restored
+            // Use a matching grace period to prevent UI flickering on momentary loss
+            if (lossTimeoutRef.current) clearTimeout(lossTimeoutRef.current);
+            
+            lossTimeoutRef.current = setTimeout(() => {
+                console.log("Target lost: clearing panel after grace period");
+                if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+                activeIndexRef.current = null;
+                setActivePortraitIndex(null);
+                setDetected(false); // PART 2: Ambient restored
+                lossTimeoutRef.current = null;
+            }, 700); // Slightly longer than engine grace for safety
         }
     };
 

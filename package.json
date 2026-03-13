@@ -16,6 +16,7 @@
     "@tailwindcss/vite": "^4.2.1",
     "autoprefixer": "^10.4.27",
     "mind-ar": "^1.2.2",
+    "openai": "^6.27.0",
     "postcss": "^8.5.8",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

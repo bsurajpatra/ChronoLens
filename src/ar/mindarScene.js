@@ -116,15 +116,15 @@ export const startAR = async (container, onTargetFound, onTargetLost) => {
             imageTargetSrc: '/targets.mind',
             uiScanning: 'no',
             uiLoading: 'no',
-            filterMinCF: 1, // Increased to reduce high-frequency jitter
-            filterBeta: 1,  // Decreased to smooth out movement 
+            filterMinCF: 0.0001, // Dramatically reduced to stabilize static jitter
+            filterBeta: 0.001,   // Reduced to provide smoother movement transitions
         });
 
         const { renderer, scene, camera } = mindarThree;
 
         // Mobile Render Clamp
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.antialias = false;
+        renderer.antialias = true; // Enabled for smoother edges on 3D UI
         renderer.setClearColor(new THREE.Color('black'), 0);
 
         // One Ambient Light Source - Optimized
@@ -170,20 +170,30 @@ export const startAR = async (container, onTargetFound, onTargetLost) => {
             glow.position.set(0, 0.65, -0.01); // Behind overlay plane
             group.add(glow);
 
+            let targetVisible = false;
+            let lossTimer = null;
             let animFrame = null;
             let startTime = null;
             let isStabilized = false;
 
             anchor.onTargetFound = () => {
                 if (onTargetFound) onTargetFound(index);
-
-                startTime = performance.now();
+                
+                // Cancel any pending loss timer or fade-out
+                if (lossTimer) {
+                    clearTimeout(lossTimer);
+                    lossTimer = null;
+                }
+                
+                if (targetVisible) return; // Already visible and active
+                
+                targetVisible = true;
                 activeTargets.set(index, true);
+                startTime = performance.now();
                 isStabilized = false;
-                console.log("Glow animation start");
 
                 const animate = (now) => {
-                    if (!activeTargets.has(index)) return;
+                    if (!activeTargets.has(index) || !targetVisible) return;
                     
                     const elapsed = now - startTime;
                     const time = now / 1000;
@@ -202,12 +212,9 @@ export const startAR = async (container, onTargetFound, onTargetLost) => {
                         material.opacity = 0.95;
                     }
 
-                    // Refined Glow HighLight Effect (PART 5)
+                    // Refined Glow HighLight Effect
                     if (elapsed < 500) {
                         const t = elapsed / 500;
-                        const ease = 1 - Math.pow(1 - t, 3); // easeOutCubic
-                        
-                        // 0 -> 0.45 -> 0.3 Logic for better visibility
                         if (t < 0.6) {
                             glowMaterial.opacity = (t / 0.6) * 0.45;
                         } else {
@@ -215,12 +222,10 @@ export const startAR = async (container, onTargetFound, onTargetLost) => {
                         }
                     } else {
                         if (!isStabilized) {
-                            console.log("Glow stabilized");
                             isStabilized = true;
                         }
-                        // Idle Breathing Animation (PART 6)
                         const breathe = Math.sin(time * 0.6) * 0.03 + 0.3; 
-                        glowMaterial.opacity = breathe; // Oscillates 0.27 <-> 0.33
+                        glowMaterial.opacity = breathe;
                     }
 
                     animFrame = requestAnimationFrame(animate);
@@ -229,39 +234,48 @@ export const startAR = async (container, onTargetFound, onTargetLost) => {
             };
 
             anchor.onTargetLost = () => {
-                activeTargets.delete(index);
-                if (onTargetLost) onTargetLost(index);
-                console.log("Glow fade out: expanding to full screen");
+                // Implement a small "grace period" before actually hiding
+                // This prevents flickering on momentary loss
+                if (lossTimer) clearTimeout(lossTimer);
+                
+                lossTimer = setTimeout(() => {
+                    if (!targetVisible) return;
+                    
+                    targetVisible = false;
+                    activeTargets.delete(index);
+                    if (onTargetLost) onTargetLost(index);
 
-                // Cinematic "Bloom Out" Fade (PART 7 - REFINED)
-                const fadeStart = performance.now();
-                const currentOpacity = material.opacity;
-                const currentGlowOpacity = glowMaterial.opacity;
-                const duration = 400; // Slightly longer for dramatic expansion
+                    // Cinematic "Bloom Out" Fade
+                    const fadeStart = performance.now();
+                    const currentOpacity = material.opacity;
+                    const currentGlowOpacity = glowMaterial.opacity;
+                    const duration = 400;
 
-                const animateOut = (now) => {
-                    const elapsed = now - fadeStart;
-                    const t = Math.min(elapsed / duration, 1);
-                    const easeOut = 1 - Math.pow(1 - t, 3); // easeOutCubic
-                    
-                    // Dramatic Scale Expansion
-                    // We scale the glow up massively to cover the view before it fades
-                    const scaleFactor = 1 + (easeOut * 15); 
-                    glow.scale.set(scaleFactor, scaleFactor, 1);
-                    
-                    material.opacity = currentOpacity * (1 - t);
-                    glowMaterial.opacity = currentGlowOpacity * (1 - t);
-                    
-                    if (t < 1) {
-                        requestAnimationFrame(animateOut);
-                    } else {
-                        // Reset for next detection
-                        glow.scale.set(1, 1, 1);
-                        material.opacity = 0;
-                        glowMaterial.opacity = 0;
-                    }
-                };
-                requestAnimationFrame(animateOut);
+                    const animateOut = (now) => {
+                        // If target was refound during fade, abort this fade
+                        if (targetVisible) return;
+
+                        const elapsed = now - fadeStart;
+                        const t = Math.min(elapsed / duration, 1);
+                        const easeOut = 1 - Math.pow(1 - t, 3);
+                        
+                        const scaleFactor = 1 + (easeOut * 15); 
+                        glow.scale.set(scaleFactor, scaleFactor, 1);
+                        
+                        material.opacity = currentOpacity * (1 - t);
+                        glowMaterial.opacity = currentGlowOpacity * (1 - t);
+                        
+                        if (t < 1) {
+                            requestAnimationFrame(animateOut);
+                        } else {
+                            glow.scale.set(1, 1, 1);
+                            material.opacity = 0;
+                            glowMaterial.opacity = 0;
+                        }
+                    };
+                    requestAnimationFrame(animateOut);
+                    lossTimer = null;
+                }, 600); // 600ms grace period for tracking stability
             };
         });
 
