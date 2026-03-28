@@ -44,6 +44,10 @@ const ImmersiveBackground = () => {
         let currentRotation = { x: 0, y: 0 };
         let targetZoom = 1;
         let currentZoom = 1;
+        
+        // Sensor smoothing state
+        let smoothedBeta = null;
+        let smoothedGamma = null;
 
         // Handle Mouse movement for desktop
         const handleMouseMove = (e) => {
@@ -56,14 +60,22 @@ const ImmersiveBackground = () => {
         // Handle Device Orientation (Gyro)
         const handleOrientation = (e) => {
             if (e.beta !== null && e.gamma !== null) {
-                // beta: tilt front/back
-                // gamma: tilt left/right
-                // We map these to camera rotation
-                
+                // Initialize on first reading
+                if (smoothedBeta === null) {
+                    smoothedBeta = e.beta;
+                    smoothedGamma = e.gamma;
+                }
+
+                // Apply low-pass filter to raw sensor data for significantly smoother tracking
+                // This eliminates jittery micromovements from the gyro sensor
+                smoothedBeta += (e.beta - smoothedBeta) * 0.1;
+                smoothedGamma += (e.gamma - smoothedGamma) * 0.1;
+
                 // Adjust for natural holding angle (roughly 45-70 degrees)
-                const betaAdjusted = e.beta - 60; 
-                targetRotation.x = (betaAdjusted) * (Math.PI / 180) * 0.5;
-                targetRotation.y = (e.gamma) * (Math.PI / 180) * 0.5;
+                const betaAdjusted = smoothedBeta - 60; 
+                
+                targetRotation.x = (betaAdjusted) * (Math.PI / 180) * 0.6; // slightly increased responsiveness to counteract filtering delay
+                targetRotation.y = (smoothedGamma) * (Math.PI / 180) * 0.6;
                 
                 // Clamp rotations to prevent flipping over
                 targetRotation.x = THREE.MathUtils.clamp(targetRotation.x, -Math.PI/4, Math.PI/4);
@@ -99,8 +111,9 @@ const ImmersiveBackground = () => {
             const time = (Date.now() - startTime) * 0.001;
 
             // 1. Smooth Rotation Interpolation
-            currentRotation.x += (targetRotation.x - currentRotation.x) * 0.05;
-            currentRotation.y += (targetRotation.y - currentRotation.y) * 0.05;
+            // Reduced interpolation factor limits sudden jumps and adds cinematic weight
+            currentRotation.x += (targetRotation.x - currentRotation.x) * 0.03;
+            currentRotation.y += (targetRotation.y - currentRotation.y) * 0.03;
 
             // 2. Subtle Constant Drift
             sphere.rotation.y = time * 0.05 + currentRotation.y;
