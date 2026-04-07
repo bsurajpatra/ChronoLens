@@ -129,7 +129,16 @@ const Landing = () => {
 
             {/* Ambient Control - Moved to Bottom Left */}
             <div className="fixed bottom-8 left-6 z-[9999] flex flex-col items-center space-y-2">
-                <MuteToggle isMuted={isMuted} onToggle={toggleMute} className="relative" />
+                <div className="relative">
+                    {/* Glowing effect to draw attention when muted */}
+                    {isMuted && (
+                        <>
+                            <div className="absolute inset-0 rounded-full bg-museum-accent/30 animate-ping"></div>
+                            <div className="absolute -inset-2 rounded-full bg-museum-accent/20 animate-pulse blur-sm"></div>
+                        </>
+                    )}
+                    <MuteToggle isMuted={isMuted} onToggle={toggleMute} className="relative" />
+                </div>
                 <p className="text-[8px] tracking-[0.3em] uppercase text-museum-accent/40 font-bold">
                     Sound
                 </p>
