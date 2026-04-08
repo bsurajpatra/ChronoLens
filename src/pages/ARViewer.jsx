@@ -17,17 +17,27 @@ const ARViewer = () => {
     const [transitionStatus, setTransitionStatus] = useState('idle'); // idle, transitioningOut, transitioningIn
     const [showGuidance, setShowGuidance] = useState(false);
     const [showScanLock, setShowScanLock] = useState(false);
+    
+    // Tracking Stability UX System States
+    const [isLocked, setIsLocked] = useState(false);
+    const [targetVisible, setTargetVisible] = useState(false);
 
     const debounceTimerRef = useRef(null);
     const activeIndexRef = useRef(null); 
     const lossTimeoutRef = useRef(null);
+    const isLockedRef = useRef(false);
+    const targetVisibleRef = useRef(false);
 
     const handleTargetFound = (index) => {
         // Cancel any pending loss sequence
         if (lossTimeoutRef.current) {
+            console.log("Target regained - cancel timeout");
             clearTimeout(lossTimeoutRef.current);
             lossTimeoutRef.current = null;
         }
+
+        setTargetVisible(true);
+        targetVisibleRef.current = true;
 
         // Prevent duplicate triggers if already searching or active
         if (activeIndexRef.current === index) return;
@@ -64,19 +74,53 @@ const ARViewer = () => {
     };
 
     const handleTargetLost = (index) => {
+        setTargetVisible(false);
+        targetVisibleRef.current = false;
+
+        // Skip loss logic entirely if view is locked
+        if (isLockedRef.current) return;
+
         // If the target we just lost is the one we are actively showing
         if (activeIndexRef.current === index) {
-            // Use a matching grace period to prevent UI flickering on momentary loss
+            console.log("Target lost - grace period started");
+
             if (lossTimeoutRef.current) clearTimeout(lossTimeoutRef.current);
             
+            // Start 1500ms Grace Period
             lossTimeoutRef.current = setTimeout(() => {
-                console.log("Target lost: clearing panel after grace period");
+                // Double check lock state just in case it was toggled during timeout
+                if (isLockedRef.current) return;
+
+                console.log("Grace period expired - hiding UI");
                 if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
                 activeIndexRef.current = null;
                 setActivePortraitIndex(null);
                 setDetected(false); // PART 2: Ambient restored
                 lossTimeoutRef.current = null;
-            }, 700); // Slightly longer than engine grace for safety
+            }, 1500);
+        }
+    };
+
+    const toggleLock = () => {
+        if (activePortraitIndex === null && !isLocked) return;
+        
+        const newLockState = !isLocked;
+        setIsLocked(newLockState);
+        isLockedRef.current = newLockState;
+        
+        if (newLockState) {
+            console.log("View locked");
+        } else {
+            console.log("View unlocked");
+            // If unlocked but target is no longer visible, execute loss logic
+            if (!targetVisibleRef.current) {
+                console.log("Grace period expired - hiding UI (from unlock)");
+                if (lossTimeoutRef.current) clearTimeout(lossTimeoutRef.current);
+                if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+                activeIndexRef.current = null;
+                setActivePortraitIndex(null);
+                setDetected(false);
+            }
         }
     };
 
@@ -155,7 +199,7 @@ const ARViewer = () => {
                 <div className="absolute inset-0 z-50 pointer-events-none flex flex-col items-center justify-center p-6">
 
                     {/* Centered Scanning Reticle */}
-                    <div className={`relative transition-all duration-500 ${(activePortraitIndex !== null || showScanLock) ? 'scale-110 opacity-0 pointer-events-none' : 'scale-100 opacity-100'}`}>
+                    <div className={`relative transition-all duration-500 ${(activePortraitIndex !== null || showScanLock || isLocked) ? 'scale-110 opacity-0 pointer-events-none' : 'scale-100 opacity-100'}`}>
                         <div className="scanning-frame scanning-pulse">
                             <div className="scanning-laser"></div>
                             {/* Corner Viewfinder Brackets */}
@@ -187,6 +231,8 @@ const ARViewer = () => {
                 portrait={activePortrait} 
                 isActive={activePortraitIndex !== null} 
                 transitionStatus={transitionStatus}
+                isLocked={isLocked}
+                onToggleLock={toggleLock}
             />
 
             {/* Loading Overlay */}

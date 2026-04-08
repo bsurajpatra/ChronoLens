@@ -6,7 +6,12 @@
         "year": "1503",
         "description": "The Mona Lisa is one of the most celebrated portraits in the history of art, renowned for its enigmatic expression and mastery of 'sfumato'—a technique using subtle gradations of light and shadow. Painted in the early 16th century, the subject's elusive smile and steady gaze have intrigued viewers for centuries, making it a cornerstone of High Renaissance portraiture. The background features a vast, desolate landscape, creating an atmospheric depth that pioneerized the use of aerial perspective in Western art.",
         "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/500px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg",
-        "audio": "/audio/mona_lisa.mp3"
+        "audio": "/audio/mona_lisa.mp3",
+        "artistDetails": {
+            "country": "Italy 🇮🇹",
+            "era": "Renaissance",
+            "bio": "Polymath of the Renaissance known for blending art and science."
+        }
     },
     {
         "id": 1,
@@ -15,7 +20,12 @@
         "year": "1665",
         "description": "The Girl with a Pearl Earring is often called the 'Mona Lisa of the North.' This masterpiece is a classic example of a 'tronie'—a Dutch Golden Age study of facial expressions. The focal point is the oversized pearl earring, which catches the light with striking realism. The subject’s turning gaze and parted lips create a sense of intimacy and direct engagement with the viewer, while the dark, featureless background emphasizes the vibrant blue of her oriental-style turban and the luminous quality of her skin.",
         "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/1665_Girl_with_a_Pearl_Earring.jpg/500px-1665_Girl_with_a_Pearl_Earring.jpg",
-        "audio": "/audio/girl_pearl_earring.mp3"
+        "audio": "/audio/girl_pearl_earring.mp3",
+        "artistDetails": {
+            "country": "Netherlands 🇳🇱",
+            "era": "Dutch Golden Age",
+            "bio": "Master of light and shadow, known for his intimate domestic scenes and extraordinary realism."
+        }
     },
     {
         "id": 2,
@@ -24,7 +34,12 @@
         "year": "1889",
         "description": "This Self-Portrait with Bandaged Ear was created in Arles during the aftermath of a severe mental health crisis, serving as a raw and powerful testament to Van Gogh's emotional state. The artist depicts himself wearing a heavy winter coat and a bandage over his ear, with an unwavering gaze that suggests deep introspection. The background features a canvas on an easel and a Japanese woodblock print, reflecting his artistic influences. Van Gogh’s signature bold, impasto brushstrokes and vibrant color palette bring a restless, psychological intensity to the work.",
         "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Vincent_van_Gogh_-_Self-portrait_with_bandaged_ear_%281889%2C_Courtauld_Institute%29.jpg/500px-Vincent_van_Gogh_-_Self-portrait_with_bandaged_ear_%281889%2C_Courtauld_Institute%29.jpg",
-        "audio": "/audio/bandaged_ear.mp3"
+        "audio": "/audio/bandaged_ear.mp3",
+        "artistDetails": {
+            "country": "Netherlands 🇳🇱",
+            "era": "Post-Impressionism",
+            "bio": "Pioneering post-impressionist painter renowned for his bold colors and expressive brushwork."
+        }
     },
     {
         "id": 3,
@@ -33,7 +48,12 @@
         "year": "1770",
         "description": "The Blue Boy is a landmark of British portraiture. This full-length study depicts a young boy—likely Jonathan Buttall—clad in a striking blue satin costume from the 17th century. The painting is a deliberate homage to Flemish master Anthony van Dyck, showcasing Gainsborough's extraordinary ability to render textures and light. Its vibrant blue hues, achieved through a sophisticated layering of pigments, set against a dark, moody landscape, have made it one of the most recognizable and beloved works in Western art history.",
         "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/The_Blue_Boy.jpg/500px-The_Blue_Boy.jpg",
-        "audio": "/audio/blue_boy.mp3"
+        "audio": "/audio/blue_boy.mp3",
+        "artistDetails": {
+            "country": "United Kingdom 🇬🇧",
+            "era": "Romanticism",
+            "bio": "Leading English portrait and landscape painter of the 18th century."
+        }
     },
     {
         "id": 4,
@@ -42,6 +62,11 @@
         "year": "1907",
         "description": "Adele Bloch-Bauer I is a masterpiece of Klimt's 'Golden Phase.' This portrait of Viennese socialite Adele Bloch-Bauer is a dazzling blend of realism and abstract ornamentation. Often called 'The Woman in Gold,' the painting is famous for its extensive use of gold and silver leaf, influenced by Byzantine mosaics. The subject's delicate features emerge from a sea of geometric patterns and symbolic motifs, creating a shimmering, ethereal effect that epitomizes Jugendstil (Art Nouveau) and the Viennese Secession movement.",
         "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Gustav_Klimt_046.jpg/960px-Gustav_Klimt_046.jpg",
-        "audio": "/audio/adele_bloch_bauer.mp3"
+        "audio": "/audio/adele_bloch_bauer.mp3",
+        "artistDetails": {
+            "country": "Austria 🇦🇹",
+            "era": "Art Nouveau",
+            "bio": "Prominent member of the Vienna Secession movement, celebrated for his highly decorative style."
+        }
     }
 ]

@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSpatialAmbient } from '../hooks/useSpatialAmbient';
 
-const PortraitPanel = ({ portrait, isActive, transitionStatus }) => {
+const PortraitPanel = ({ portrait, isActive, transitionStatus, isLocked, onToggleLock }) => {
     const [isExpanded, setIsExpanded] = useState(false);
+    const [isArtistExpanded, setIsArtistExpanded] = useState(false);
     const [isVoiceoverPlaying, setIsVoiceoverPlaying] = useState(false);
     const voiceoverRef = useRef(null);
     const { duckAmbient, setPanelFocused } = useSpatialAmbient();
@@ -19,6 +20,7 @@ const PortraitPanel = ({ portrait, isActive, transitionStatus }) => {
         setPanelFocused(isActive);
         if (!isActive) {
             setIsExpanded(false);
+            setIsArtistExpanded(false);
         }
     }, [portrait, isActive, setPanelFocused]);
 
@@ -74,7 +76,7 @@ const PortraitPanel = ({ portrait, isActive, transitionStatus }) => {
                 }`}
         >
             <div
-                className={`bg-museum-bg/95 backdrop-blur-3xl border border-museum-accent/20 rounded-[2rem] p-4 pb-16 shadow-2xl safe-bottom relative max-w-xl mx-auto overflow-hidden transition-all duration-300 ${isExpanded ? 'max-h-[60vh] overflow-y-auto' : 'max-h-[300px]'
+                className={`bg-museum-bg/95 backdrop-blur-3xl border border-museum-accent/20 rounded-[2rem] p-4 pb-16 shadow-2xl safe-bottom relative max-w-xl mx-auto overflow-hidden transition-all duration-300 ${isExpanded || isArtistExpanded ? 'max-h-[60vh] overflow-y-auto' : 'max-h-[300px]'
                     }`}
             >
                 {/* Subtle pull indicator / Toggle area */}
@@ -84,9 +86,23 @@ const PortraitPanel = ({ portrait, isActive, transitionStatus }) => {
                     aria-label={isExpanded ? "Collapse info" : "Expand info"}
                 ></button>
 
-                <div className="flex items-start gap-4 mt-3 mb-6">
+                {isActive && (
+                    <button
+                        onClick={onToggleLock}
+                        className={`absolute top-4 right-4 z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all shadow-sm group ${
+                            isLocked 
+                            ? 'border-museum-accent bg-museum-accent text-black shadow-[0_0_15px_rgba(198,161,91,0.5)]' 
+                            : 'border-museum-accent/30 bg-museum-bg/80 backdrop-blur-md text-museum-accent'
+                        }`}
+                    >
+                        <span className="text-[12px] leading-none mb-0.5">{isLocked ? '🔓' : '🔒'}</span>
+                        <span className="text-[9px] tracking-widest font-bold uppercase transition-transform group-active:scale-95">{isLocked ? 'Unlock View' : 'Lock View'}</span>
+                    </button>
+                )}
+
+                <div className="flex items-start gap-4 mt-10 mb-6">
                     {/* Portrait Thumbnail - Scales with expansion */}
-                    <div className={`relative flex-shrink-0 overflow-hidden rounded-xl border border-museum-accent/20 shadow-xl transition-all duration-300 ${isExpanded ? 'w-20 h-30 sm:w-24 sm:h-36' : 'w-16 h-24 sm:w-20 sm:h-28'
+                    <div className={`relative flex-shrink-0 overflow-hidden rounded-xl border border-museum-accent/20 shadow-xl transition-all duration-300 ${isExpanded || isArtistExpanded ? 'w-20 h-30 sm:w-24 sm:h-36' : 'w-16 h-24 sm:w-20 sm:h-28'
                         }`}>
                         <img
                             src={portrait.image}
@@ -147,15 +163,37 @@ const PortraitPanel = ({ portrait, isActive, transitionStatus }) => {
                                     <>Read More <span className="group-hover:translate-y-0.5 transition-transform">↓</span></>
                                 )}
                             </button>
+
+                            {/* Artist Details Expandable Section */}
+                            {portrait.artistDetails && (
+                                <div className="mt-4 border-t border-museum-accent/10 pt-3">
+                                    <button 
+                                        onClick={() => setIsArtistExpanded(!isArtistExpanded)}
+                                        className="flex items-center gap-1 text-museum-accent text-[10px] font-bold uppercase tracking-[0.15em] hover:opacity-80 transition-all group"
+                                    >
+                                        Artist Details <span className="transition-transform duration-300 transform group-hover:translate-y-0.5">{isArtistExpanded ? '↑' : '↓'}</span>
+                                    </button>
+                                    
+                                    <div className={`overflow-hidden transition-all duration-300 ${isArtistExpanded ? 'max-h-40 mt-3 opacity-100' : 'max-h-0 opacity-0'}`}>
+                                        <h4 className="text-museum-text font-serif text-sm font-bold">{portrait.artist}</h4>
+                                        <p className="text-museum-muted text-[10px] mt-0.5">
+                                            {portrait.artistDetails.country} • {portrait.artistDetails.era}
+                                        </p>
+                                        <p className="text-museum-muted text-[11px] leading-relaxed mt-2 italic">
+                                            {portrait.artistDetails.bio}
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
 
                 <div className="mt-4 mb-5 flex justify-between items-end opacity-60">
                     <div className="flex items-center gap-1.5">
-                        <div className="w-1 h-1 rounded-full bg-museum-accent"></div>
-                        <p className="text-museum-accent text-[8px] tracking-[0.2em] uppercase font-bold">
-                            {isVoiceoverPlaying ? 'VOICEOVER: ACTIVE' : 'ARCHIVE: ACTIVE'}
+                        <div className={`w-1 h-1 rounded-full ${isLocked ? 'bg-red-500 animate-pulse' : 'bg-museum-accent'}`}></div>
+                        <p className={`text-[8px] tracking-[0.2em] uppercase font-bold ${isLocked ? 'text-red-500' : 'text-museum-accent'}`}>
+                            {isLocked ? 'TRACKING: LOCKED' : (isVoiceoverPlaying ? 'VOICEOVER: ACTIVE' : 'ARCHIVE: ACTIVE')}
                         </p>
                     </div>
                     <p className="text-museum-muted text-[8px] font-mono tracking-widest">
