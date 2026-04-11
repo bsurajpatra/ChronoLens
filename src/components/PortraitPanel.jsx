@@ -174,14 +174,27 @@ const PortraitPanel = ({ portrait, isActive, transitionStatus, isLocked, onToggl
                                         Artist Details <span className="transition-transform duration-300 transform group-hover:translate-y-0.5">{isArtistExpanded ? '↑' : '↓'}</span>
                                     </button>
                                     
-                                    <div className={`overflow-hidden transition-all duration-300 ${isArtistExpanded ? 'max-h-40 mt-3 opacity-100' : 'max-h-0 opacity-0'}`}>
-                                        <h4 className="text-museum-text font-serif text-sm font-bold">{portrait.artist}</h4>
-                                        <p className="text-museum-muted text-[10px] mt-0.5">
-                                            {portrait.artistDetails.country} • {portrait.artistDetails.era}
-                                        </p>
-                                        <p className="text-museum-muted text-[11px] leading-relaxed mt-2 italic">
-                                            {portrait.artistDetails.bio}
-                                        </p>
+                                    <div className={`overflow-hidden transition-all duration-300 ${isArtistExpanded ? 'max-h-[300px] mt-3 opacity-100' : 'max-h-0 opacity-0'}`}>
+                                        <div className="flex items-start gap-4">
+                                            {portrait.artistDetails.photo && (
+                                                <div className="w-14 h-14 flex-shrink-0 rounded-lg overflow-hidden border border-museum-accent/30 shadow-md">
+                                                    <img 
+                                                        src={portrait.artistDetails.photo} 
+                                                        alt={portrait.artist} 
+                                                        className="w-full h-full object-cover grayscale-[20%]"
+                                                    />
+                                                </div>
+                                            )}
+                                            <div className="flex-1 min-w-0">
+                                                <h4 className="text-museum-text font-serif text-sm font-bold">{portrait.artist}</h4>
+                                                <p className="text-museum-muted text-[10px] mt-0.5">
+                                                    {portrait.artistDetails.country} • {portrait.artistDetails.era}
+                                                </p>
+                                                <p className="text-museum-muted text-[11px] leading-relaxed mt-2 italic">
+                                                    {portrait.artistDetails.bio}
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             )}

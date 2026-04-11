@@ -10,7 +10,8 @@
         "artistDetails": {
             "country": "Italy 🇮🇹",
             "era": "Renaissance",
-            "bio": "Polymath of the Renaissance known for blending art and science."
+            "bio": "Polymath of the Renaissance known for blending art and science.",
+            "photo": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Francesco_Melzi_-_Portrait_of_Leonardo.png/500px-Francesco_Melzi_-_Portrait_of_Leonardo.png"
         }
     },
     {
@@ -24,7 +25,8 @@
         "artistDetails": {
             "country": "Netherlands 🇳🇱",
             "era": "Dutch Golden Age",
-            "bio": "Master of light and shadow, known for his intimate domestic scenes and extraordinary realism."
+            "bio": "Master of light and shadow, known for his intimate domestic scenes and extraordinary realism.",
+            "photo": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Cropped_version_of_Jan_Vermeer_van_Delft_002.jpg/500px-Cropped_version_of_Jan_Vermeer_van_Delft_002.jpg"
         }
     },
     {
@@ -38,7 +40,8 @@
         "artistDetails": {
             "country": "Netherlands 🇳🇱",
             "era": "Post-Impressionism",
-            "bio": "Pioneering post-impressionist painter renowned for his bold colors and expressive brushwork."
+            "bio": "Pioneering post-impressionist painter renowned for his bold colors and expressive brushwork.",
+            "photo": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Vincent_van_Gogh_-_Self-Portrait_-_Google_Art_Project_%28454045%29.jpg/500px-Vincent_van_Gogh_-_Self-Portrait_-_Google_Art_Project_%28454045%29.jpg"
         }
     },
     {
@@ -52,7 +55,8 @@
         "artistDetails": {
             "country": "United Kingdom 🇬🇧",
             "era": "Romanticism",
-            "bio": "Leading English portrait and landscape painter of the 18th century."
+            "bio": "Leading English portrait and landscape painter of the 18th century.",
+            "photo": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Thomas_Gainsborough_by_Thomas_Gainsborough.jpg/500px-Thomas_Gainsborough_by_Thomas_Gainsborough.jpg"
         }
     },
     {
@@ -66,7 +70,8 @@
         "artistDetails": {
             "country": "Austria 🇦🇹",
             "era": "Art Nouveau",
-            "bio": "Prominent member of the Vienna Secession movement, celebrated for his highly decorative style."
+            "bio": "Prominent member of the Vienna Secession movement, celebrated for his highly decorative style.",
+            "photo": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Klimt.jpg/500px-Klimt.jpg"
         }
     }
 ]
